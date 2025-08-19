@@ -1,0 +1,4 @@
+repository "Crushibara 2025-08-19_14-44-12/Crushibara@4673003618052@cloud"
+  path "/"
+    br "/main"
+    co "/main"
