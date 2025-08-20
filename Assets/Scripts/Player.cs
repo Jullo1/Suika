@@ -4,9 +4,11 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour
 {
     InputAction _moveAction;
-    InputAction _attackAction;
+    InputAction _sendAction;
     [SerializeField] float speed;
     float releaseCD;
+    bool circleReady;
+    public static int circleCount;
 
     [SerializeField] GameObject circlePrefab;
     Circle _circle;
@@ -14,45 +16,48 @@ public class Player : MonoBehaviour
     void Awake()
     {
         _moveAction = InputSystem.actions.FindAction("Move");
-        _attackAction = InputSystem.actions.FindAction("Attack");
-    }
-
-    void Start()
-    {
-        NextCircle();
+        _sendAction = InputSystem.actions.FindAction("Jump");
     }
 
     void Update()
     {
         Move();
         Cooldowns();
-        if (_attackAction.IsPressed() && releaseCD <= 0) ReleaseCircle();
+
+        if (releaseCD == 0)
+        {
+            if (!circleReady) NextCircle();
+            if (_sendAction.IsPressed()) ReleaseCircle();
+        }
     }
 
     void NextCircle()
     {
+        transform.position = new Vector3(0, transform.position.y, 0);
+        circleReady = true;
+        circleCount++;
         GameObject circleObject = Instantiate(circlePrefab, gameObject.transform);
         _circle = circleObject.GetComponent<Circle>();
     }
 
     void ReleaseCircle()
     {
-        releaseCD = 2;
-        _circle.transform.parent = null;
+        circleReady = false;
         _circle.Release();
-        NextCircle();
+        releaseCD = 2;
     }
 
     void Move()
     {
-        if (transform.position.x < -2.5) transform.position = new Vector3(-2.5f, transform.position.y, 0);
-        else if (transform.position.x > 2.5) transform.position = new Vector3(2.5f, transform.position.y, 0);
+        if (transform.position.x < -2.1) transform.position = new Vector3(-2.1f, transform.position.y, 0);
+        else if (transform.position.x > 2.1) transform.position = new Vector3(2.1f, transform.position.y, 0);
 
         else transform.position += Vector3.right * _moveAction.ReadValue<Vector2>().x * Time.deltaTime * speed;
     }
 
     void Cooldowns()
     {
-        releaseCD -= Time.deltaTime;
+        if (releaseCD > 0) releaseCD -= Time.deltaTime;
+        else if (releaseCD < 0) releaseCD = 0;
     }
 }
