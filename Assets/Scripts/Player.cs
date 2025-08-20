@@ -3,6 +3,8 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
+    AudioSource _aud;
+
     InputAction _moveAction;
     InputAction _sendAction;
     [SerializeField] float speed;
@@ -15,6 +17,7 @@ public class Player : MonoBehaviour
 
     void Awake()
     {
+        _aud = GetComponent<AudioSource>();
         _moveAction = InputSystem.actions.FindAction("Move");
         _sendAction = InputSystem.actions.FindAction("Jump");
     }
@@ -27,7 +30,7 @@ public class Player : MonoBehaviour
         if (releaseCD == 0)
         {
             if (!circleReady) NextCircle();
-            if (_sendAction.IsPressed()) ReleaseCircle();
+            if (_sendAction.IsPressed() && circleReady) ReleaseCircle();
         }
     }
 
@@ -45,6 +48,7 @@ public class Player : MonoBehaviour
         circleReady = false;
         _circle.Release();
         releaseCD = 2;
+        _aud.Play();
     }
 
     void Move()
