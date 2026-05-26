@@ -47,7 +47,7 @@ public class Player : MonoBehaviour
     {
         circleReady = false;
         _circle.Release();
-        releaseCD = 2;
+        releaseCD = 0.5f;
         _aud.Play();
     }
 

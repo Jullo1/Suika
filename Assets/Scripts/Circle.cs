@@ -34,7 +34,7 @@ public class Circle : MonoBehaviour
     {
         transform.parent = null;
         _col.enabled = true;
-        _rb.gravityScale = 1;
+        _rb.gravityScale = 1.5f;
     }
 
     void Merge(Circle circle2)
@@ -50,7 +50,7 @@ public class Circle : MonoBehaviour
         else
         {
             _aud.Play();
-            transform.localScale += Vector3.one / 3;
+            transform.localScale += Vector3.one / 4;
             UpdateSprite();
         }
     }
@@ -58,9 +58,9 @@ public class Circle : MonoBehaviour
     void RandomizeSize()
     {
         int spawnSize = Player.circleCount / 10;
-        if (spawnSize > 4) spawnSize = 4;
+        if (spawnSize > 6) spawnSize = 6;
         size = Random.Range(0, spawnSize + 1);
-        transform.localScale += (Vector3.one / 3) * size;
+        transform.localScale += (Vector3.one / 4) * size;
         UpdateSprite();
     }
 
